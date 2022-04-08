@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>QR გენერირება</title>
+      <meta name="keywords" content="ქრ, qr">
+      <meta name="description" content="quick response, სწრაფი რეაგირების ხატულა.">
+      <link rel="stylesheet" type="text/css" href="./files/style.min.css">
+      <style>
+         em{ color:#CC0000}
+      </style>
+      <style type="text/css"></style>
+      <style id="stylish-5" class="stylish" type="text/css">
+         ::-webkit-scrollbar
+         {
+         width: 6px;
+         height: 6px;
+         transition: all 0.5s;
+         -webkit-transition: all .5s;	
+         }
+         ::-webkit-scrollbar-track-piece
+         {
+         background-color: #CCCCCC;
+         -webkit-border-radius: 6px;
+         }
+         ::-webkit-scrollbar-thumb:vertical
+         {
+         height: 5px;
+         background-color: #999999;
+         -webkit-border-radius: 6px;
+         }
+         ::-webkit-scrollbar-thumb:horizontal
+         {
+         width: 5px;
+         background-color: #CCAAAA;
+         -webkit-border-radius: 6px;
+         }
+         ::-webkit-scrollbar-thumb:hover
+         {
+         width: 8px;
+         background-color: #CC5555;
+         -webkit-border-radius: 6px;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="wrapper">
+         <div id="topArea">
+            <h1>QR შემქმნელი</h1>
+            <p><em>html5 მხარდაჭერა აუცილებელია</em></p>
+            </p>
+            <p>&nbsp;</p>
+         </div>
+         <div id="adSpace1" class="ad">
+         </div>
+         <div id="app">
+            <div id="customBar">
+               <div class="active" id="btn_content">შექმნა</div>
+               <div id="btn_design" class="">სტილი</div>
+               <div id="btn_export" class="">შენახვა</div>
+            </div>
+            <div id="customInputs">
+               <div id="contentInputs" style="display: block;">
+                  <span>აირჩიეთ შინაარსი</span>
+                  <select id="inputSelector">
+                     <option value="Plain">Plain Text</option>
+                     <option value="URL">URL</option>
+                     <option value="Geo">Geo-Information</option>
+                     <option value="Email">Send Email</option>
+                     <option value="SMS">Send SMS</option>
+                  </select>
+                  <div id="contentPlain" style="display: block;">
+                     <label>Text</label>
+                     <textarea id="inPlain"></textarea>
+                  </div>
+                  <div id="contentURL" style="display: none;">
+                     <label>URL</label>
+                     <input type="text" id="inURL" value="http://">
+                  </div>
+                  <div id="contentGeo" style="display: none;">
+                     <label>Latitude</label>
+                     <input type="text" id="inLat">
+                     <label>Longitude</label>
+                     <input type="text" id="inLon">
+                  </div>
+                  <div id="contentEmail" style="display: none;">
+                     <label>Email To</label>
+                     <input type="text" id="inEmailTo"><br>
+                     <label>Email Content</label>
+                     <textarea id="inEmailContent"></textarea>
+                  </div>
+                  <div id="contentSMS" style="display: none;">
+                     <label>SMS To</label>
+                     <input type="text" id="inSMSTo"><br>
+                     <label>SMS Content</label>
+                     <textarea id="inSMSContent"></textarea>
+                  </div>
+               </div>
+               <div id="designInputs" style="display: none;">
+                  <label>ფერი</label>
+                  <input id="fColor" class="color" value="000000" autocomplete="off" style="color: rgb(255, 255, 255); background-image: none; background-color: rgb(0, 0, 0);">
+                  <label>ფონის ფერი</label>
+                  <input id="bColor" class="color" autocomplete="off" style="color: rgb(0, 0, 0); background-image: none; background-color: rgb(255, 255, 255);">
+                  <label>QR კოდის გრაფიკული სტილი</label>
+                  <select id="inShape">
+                     <option value="rectangles">Squares</option>
+                     <option value="roundedRectangles">Rounded Squares</option>
+                     <option value="circles">Circles</option>
+                     <option value="smooth">Smooth (try it!)</option>
+                  </select>
+                  <label>ჩარჩოს ზომა</label>
+                  <select id="inBorder">
+                     <option value="20">Small</option>
+                     <option value="60" selected="">Medium</option>
+                     <option value="120">Large</option>
+                  </select>
+               </div>
+               <div id="exportInputs" style="display: none;">
+                  <label>შესანახი ფორმატი</label>
+                  <select id="inExType">
+                     <option value="image/png">Rasterized (PNG)</option>
+                     <option value="image/svg">Vector (SVG)</option>
+                  </select>
+                  <label>ზომებიწ</label>
+                  <input style="width:140px;text-align:right;" id="inExSize1" type="text" value="500">&nbsp;x&nbsp;<input style="width:140px;text-align:left;" id="inExSize2" type="text" value="500" disabled="">
+                  <div id="adSpace2" class="ad">
+                  </div>
+                  <div id="btn_download">
+                     გადმოწერა
+                  </div>
+               </div>
+            </div>
+            <div id="surface"></div>
+         </div>
+         <div id="adSpace3" class="ad">
+         </div>
+         <div id="footer">
+         </div>
+      </div>
+      <script type="text/javascript" src="./files/jscolor.js"></script>
+      <script type="text/javascript" src="./files/qr-encoder.min.js"></script>
+      <script type="text/javascript">
+         window.onload = function() {
+           var config = {
+             text: "",
+             size: 500,
+             border: 60,
+             color: "black",
+             shape: "smooth",
+             notice: "http://"+window.top.location.host,
+             format: "image/svg"
+           };
+         
+           var $ = function(id){
+             return document.getElementById(id);
+           };
+         
+           var inputTypes = {
+             "URL": { prefix: '', inputs: ["inURL"] },
+             "Plain": { prefix: '', inputs: ["inPlain"] },
+             "Geo": { prefix: 'geo:', seperator: ',', inputs: ["inLat", "inLon"]},
+             "Email": { prefix: 'mailto:', seperator: '?body=', inputs: ["inEmailTo", "inEmailContent"] },
+             "SMS": { prefix: 'smsto:', seperator: ':', inputs: ["inSMSTo", "inSMSContent"] }
+           };
+         
+           var selectedInputType = "Plain";
+         
+           var selectInputType = function(type){
+             selectedInputType = type;
+         
+             for(var key in inputTypes){
+               $('content' + key).style.display = (type == key) ? "block" : "none";
+             }
+           };
+           $('inputSelector').onchange = function(){
+             selectInputType(this.value);
+           };
+         
+           selectInputType(selectedInputType);
+         
+           var inputs = [];
+           var ins = document.getElementsByTagName('input');
+           var selects = document.getElementsByTagName('textarea');
+           for(var i = 0; i < ins.length; i++){
+             inputs.push(ins[i]);
+           }
+           for(var i = 0; i < selects.length; i++){
+             inputs.push(selects[i]);
+           }
+         
+           var len = inputs.length;
+           while(len--){
+             inputs[len].onkeyup = function(){
+               refreshOutput();
+             };
+           }
+         
+         
+           var refreshOutput = function(){
+             var t = "";
+             var inputType = inputTypes[selectedInputType],
+                 inputs = inputType.inputs,
+                 len = inputs.length;
+         
+             t += inputType.prefix;
+         
+             for(var i = 0; i < len; i++){
+               t += ($(inputs[i]).value + (inputType.seperator && i+1!=len?inputType.seperator:""));
+             }
+         
+             config.text = t;
+             config.shape = $('inShape').value;
+             config.color = ("#" + $('fColor').value);
+             config.bgColor = ("#" + $('bColor').value);
+             config.border = parseInt($('inBorder').value, 10);
+         
+             $('surface').innerHTML = QR.encode(config);
+           };
+         
+           refreshOutput();
+         
+           var sections = ['contentInputs', 'designInputs', 'exportInputs'];
+           var btns = ['btn_content', 'btn_design', 'btn_export'];
+           var showSection = function(section){
+             for(var i = 0; i < sections.length; i++){
+               $(sections[i]).style.display = ( i == section) ? "block" : "none";
+               $(btns[i]).className = ( i == section ) ? 'active' : '';
+             }
+         
+           };
+           
+           // default display section 0 
+           showSection(0);
+         
+           $('btn_content').onclick = function(){
+             showSection(0);
+           };
+           $('btn_design').onclick = function(){
+             showSection(1);
+           };
+           $('btn_export').onclick = function(){
+             showSection(2);
+           };
+           $('inBorder').onchange = $('inShape').onchange = $('fColor').onchange = $('bColor').onchange = function(){ refreshOutput(); };
+         
+           var lastValue = 500;
+         
+           $('inExSize1').onkeyup = function() {
+             // number check
+             if(!isNaN(parseFloat(this.value)) && isFinite(this.value)){
+               lastValue = this.value;
+             }
+              $('inExSize1').value = $('inExSize2').value = lastValue;
+           };
+         
+           $('btn_download').onclick = function() {
+             var downloadCfg = {
+               text: "test124",
+               size: 500,
+               border: 60,
+               color: "black",
+               shape: "smooth",
+               notice: config.notice,
+               format: "image/svg"
+             };
+             var t = "";
+             var inputType = inputTypes[selectedInputType],
+                 inputs = inputType.inputs,
+                 len = inputs.length;
+         
+             t += inputType.prefix;
+         
+             for(var i = 0; i < len; i++){
+               t += $(inputs[i]).value;
+             }
+         
+             downloadCfg.text = t;
+             downloadCfg.shape = $('inShape').value;
+             downloadCfg.color = ("#" + $('fColor').value);
+             downloadCfg.bgColor = ("#" + $('bColor').value);
+             downloadCfg.border = parseInt($('inBorder').value, 10);
+             downloadCfg.size = $('inExSize1').value;
+             downloadCfg.format = $('inExType').value;
+         
+             var output = QR.encode(downloadCfg);
+             if(downloadCfg.format == "image/svg"){
+               output = "data:image/svg+xml;utf8," + output;
+             }
+             window.open(output, "Your QR Code");
+           };
+         };
+      </script>
+   </body>
+</html>
